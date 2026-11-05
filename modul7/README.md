@@ -1,128 +1,120 @@
-Modul 7: RESTful API CRUD dengan Fiber v3 & GORM
+# Modul 7: RESTful API CRUD dengan Fiber v3 & GORM
 
-Dokumentasi implementasi RESTful API untuk pengelolaan data mahasiswa menggunakan framework Go Fiber v3, GORM ORM, dan database MySQL. Projek ini menerapkan arsitektur Repository Pattern dan Data Transfer Object (DTO) untuk pemisahan logika aplikasi yang bersih dan terstruktur.
+Dokumentasi implementasi RESTful API untuk pengelolaan data mahasiswa menggunakan framework Go **Fiber v3**, **GORM** ORM, dan database **MySQL**. Projek ini menerapkan arsitektur **Repository Pattern** dan **Data Transfer Object (DTO)** untuk pemisahan logika aplikasi yang bersih dan terstruktur.
 
-🚀 Fitur Utama
+## 🚀 Fitur Utama
 
-Repository Pattern: Pemisahan logika akses basis data (internal/repository) dengan handler HTTP (internal/handler).
+- **Repository Pattern**: Pemisahan logika akses basis data (`internal/repository`) dengan handler HTTP (`internal/handler`).
+- **Request DTO & Validation**: Penggunaan struct DTO dan pointer untuk penanganan request body JSON yang aman.
+- **GORM Relational Mapping**: Relasi *Belongs To* antara model `Mahasiswa` dan `ProgramStudi` dengan fitur `Preload`.
+- **Full CRUD Endpoints**:
 
-Request DTO & Validation: Penggunaan struct DTO dan pointer untuk penanganan request body JSON yang aman.
+  | Method | Endpoint | Deskripsi |
+  |--------|----------|-----------|
+  | `GET` | `/api/mahasiswa` | Mengambil daftar mahasiswa (dilengkapi Pagination & Search/Filter) |
+  | `GET` | `/api/mahasiswa/:id` | Mengambil detail data mahasiswa berdasarkan ID |
+  | `POST` | `/api/mahasiswa` | Menambahkan data mahasiswa baru |
+  | `PUT` | `/api/mahasiswa/:id` | Memperbarui data mahasiswa |
+  | `DELETE` | `/api/mahasiswa/:id` | Menghapus data mahasiswa |
 
-GORM Relational Mapping: Relasi Belongs To antara model Mahasiswa dan ProgramStudi dengan fitur Preload.
+- **Auto Migration & Seeder**: Migrasi tabel otomatis dan pengisian data awal program studi saat server dinyalakan.
 
-Full CRUD Endpoints:
+## 📁 Struktur Direktori
 
-GET /api/mahasiswa — Mengambil daftar mahasiswa (dilengkapi Pagination & Search/Filter).
-
-GET /api/mahasiswa/:id — Mengambil detail data mahasiswa berdasarkan ID.
-
-POST /api/mahasiswa — Menambahkan data mahasiswa baru.
-
-PUT /api/mahasiswa/:id — Memperbarui data mahasiswa.
-
-DELETE /api/mahasiswa/:id — Menghapus data mahasiswa.
-
-Auto Migration & Seeder: Migrasi tabel otomatis dan pengisian data awal program studi saat server dinyalakan.
-
-📁 Struktur Direktori
-
+```text
 modul7/
 ├── cmd/
 │   └── api/
 │       └── main.go                  # Entry point aplikasi
 ├── internal/
 │   ├── config/
-│   │   ├── config.go               # Memuat konfig variabel lingkungan (.env)
-│   │   ├── database.go             # Inisialisasi koneksi MySQL via GORM
-│   │   └── migrasi.go              # Auto-migrate model & seeder data awal
+│   │   ├── config.go                # Memuat konfig variabel lingkungan (.env)
+│   │   ├── database.go              # Inisialisasi koneksi MySQL via GORM
+│   │   └── migrasi.go               # Auto-migrate model & seeder data awal
 │   ├── handler/
-│   │   ├── dto.go                  # Struct Request DTO
-│   │   └── mahasiswa_handler.go    # HTTP Logic & Controller CRUD
+│   │   ├── dto.go                   # Struct Request DTO
+│   │   └── mahasiswa_handler.go     # HTTP Logic & Controller CRUD
 │   ├── model/
-│   │   └── mahasiswa.go            # GORM Struct Models (Mahasiswa & ProgramStudi)
+│   │   └── mahasiswa.go             # GORM Struct Models (Mahasiswa & ProgramStudi)
 │   ├── repository/
-│   │   └── mahasiswa_repository.go # Database Layer / GORM Queries
+│   │   └── mahasiswa_repository.go  # Database Layer / GORM Queries
 │   └── router/
-│       └── router.go               # Definisi route & endpoint API
-├── .env                            # Konfigurasi Environment (DB, Port, App)
-├── go.mod                          # Go Modules
-└── go.sum                          # Dependensi checksum Go
+│       └── router.go                # Definisi route & endpoint API
+├── .env                             # Konfigurasi Environment (DB, Port, App)
+├── go.mod                           # Go Modules
+└── go.sum                           # Dependensi checksum Go
+```
 
+## ⚙️ Persyaratan Sistem & Dependensi
 
-⚙️ Persyaratan Sistem & Dependensi
+- **Go**: Version 1.20+
+- **MySQL** Database
+- **Go Packages**:
+  - `github.com/gofiber/fiber/v3`
+  - `gorm.io/gorm`
+  - `gorm.io/driver/mysql`
+  - `github.com/joho/godotenv`
 
-Go: Version 1.20+
+## 🛠️ Instalasi & Cara Menjalankan
 
-MySQL Database
+1. **Pastikan MySQL Aktif**
 
-Go Packages:
+   Buat database baru di MySQL/XAMPP dengan nama `pemweb2_fiber`:
 
-github.com/gofiber/fiber/v3
+   ```sql
+   CREATE DATABASE pemweb2_fiber;
+   ```
 
-gorm.io/gorm
+2. **Pengaturan `.env`**
 
-gorm.io/driver/mysql
+   Buat berkas `.env` di dalam folder `modul7/`:
 
-github.com/joho/godotenv
+   ```env
+   APP_NAME="Fiber API Modul 7"
+   APP_PORT=3000
+   APP_ENV=local
 
-🛠️ Instalasi & Cara Menjalankan
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_NAME=pemweb2_fiber
+   DB_USER=root
+   DB_PASS=
+   ```
 
-Pastikan MySQL Aktif
+3. **Install Dependensi**
 
-Buat database baru di MySQL/XAMPP dengan nama pemweb2_fiber:
+   Jalankan perintah berikut di dalam direktori `modul7/`:
 
-CREATE DATABASE pemweb2_fiber;
+   ```bash
+   go mod tidy
+   ```
 
+4. **Jalankan Aplikasi**
 
-Pengaturan .env
+   ```bash
+   go run cmd/api/main.go
+   ```
 
-Buat berkas .env di dalam folder modul7/:
+   Server akan berjalan secara otomatis di <http://localhost:3000>.
 
-APP_NAME="Fiber API Modul 7"
-APP_PORT=3000
-APP_ENV=local
+## 📡 Dokumentasi API Endpoint
 
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_NAME=pemweb2_fiber
-DB_USER=root
-DB_PASS=
+### 1. Ambil Daftar Mahasiswa
 
+- **URL**: `/api/mahasiswa`
+- **Method**: `GET`
+- **Query Parameters**:
 
-Install Dependensi
+  | Parameter | Default | Keterangan |
+  |-----------|---------|------------|
+  | `halaman` | `1` | Nomor halaman |
+  | `per_halaman` | `10` | Jumlah data per halaman |
+  | `cari` | - | (opsional) Cari berdasarkan nama/NIM |
+  | `angkatan` | - | (opsional) Filter tahun angkatan |
 
-Jalankan perintah berikut di dalam direktori modul7/:
+**Response Contoh (200 OK):**
 
-go mod tidy
-
-
-Jalankan Aplikasi
-
-go run cmd/api/main.go
-
-
-Server akan berjalan secara otomatis di http://localhost:3000.
-
-📡 Dokumentasi API Endpoint
-
-1. Ambil Daftar Mahasiswa
-
-URL: /api/mahasiswa
-
-Method: GET
-
-Query Parameters:
-
-halaman (default: 1)
-
-per_halaman (default: 10)
-
-cari (opsional: cari berdasarkan nama/NIM)
-
-angkatan (opsional: filter tahun angkatan)
-
-Response Contoh (200 OK):
-
+```json
 {
   "sukses": true,
   "data": [
@@ -150,16 +142,16 @@ Response Contoh (200 OK):
     "total_halaman": 1
   }
 }
+```
 
+### 2. Ambil Detail Mahasiswa
 
-2. Ambil Detail Mahasiswa
+- **URL**: `/api/mahasiswa/:id`
+- **Method**: `GET`
 
-URL: /api/mahasiswa/:id
+**Response Contoh (200 OK):**
 
-Method: GET
-
-Response Contoh (200 OK):
-
+```json
 {
   "sukses": true,
   "data": {
@@ -179,16 +171,16 @@ Response Contoh (200 OK):
     "aktif": true
   }
 }
+```
 
+### 3. Tambah Mahasiswa
 
-3. Tambah Mahasiswa
+- **URL**: `/api/mahasiswa`
+- **Method**: `POST`
 
-URL: /api/mahasiswa
+**Request Body:**
 
-Method: POST
-
-Request Body:
-
+```json
 {
   "program_studi_id": 1,
   "nim": "220101002",
@@ -198,49 +190,52 @@ Request Body:
   "ipk": 3.80,
   "aktif": true
 }
+```
 
+**Response Contoh (201 Created):**
 
-Response Contoh (201 Created):
-
+```json
 {
   "sukses": true,
   "pesan": "Data mahasiswa berhasil dibuat",
   "data": { ... }
 }
+```
 
+### 4. Perbarui Mahasiswa
 
-4. Perbarui Mahasiswa
+- **URL**: `/api/mahasiswa/:id`
+- **Method**: `PUT`
 
-URL: /api/mahasiswa/:id
+**Request Body (Partial Update / DTO):**
 
-Method: PUT
-
-Request Body (Partial Update / DTO):
-
+```json
 {
   "nama": "Siti Aminah, S.Kom",
   "ipk": 3.90
 }
+```
 
+**Response Contoh (200 OK):**
 
-Response Contoh (200 OK):
-
+```json
 {
   "sukses": true,
   "pesan": "Data mahasiswa berhasil diperbarui",
   "data": { ... }
 }
+```
 
+### 5. Hapus Mahasiswa
 
-5. Hapus Mahasiswa
+- **URL**: `/api/mahasiswa/:id`
+- **Method**: `DELETE`
 
-URL: /api/mahasiswa/:id
+**Response Contoh (200 OK):**
 
-Method: DELETE
-
-Response Contoh (200 OK):
-
+```json
 {
   "sukses": true,
   "pesan": "Data mahasiswa berhasil dihapus"
 }
+```
