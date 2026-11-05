@@ -1,0 +1,13 @@
+# File konfigurasi lingkungan (sensitif)
+.env
+
+# File biner / executable Go
+*.exe
+*.exe.stackdump
+*.test
+*.out
+main
+
+# Folder vendor atau temporary
+/vendor/
+.DS_Store
