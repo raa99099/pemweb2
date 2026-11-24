@@ -14,7 +14,7 @@ Implementasi backend RESTful API menggunakan framework **Go Fiber v3** dan **GOR
 - **Middleware CORS**: Mengizinkan akses lintas *origin* dari frontend Vite/React (`http://localhost:5173`) beserta *preflight request* (`OPTIONS`)[cite: 9, 10].
 
 ## Cara Menjalankan
-1. Salin konfigurasi `.env` dan sesuaikan koneksi database MySQL (`pemweb2_fiber`).
+1. Sesuaikan konfigurasi database MySQL (`pemweb2_fiber`) dan port (`3000`) pada berkas `.env`.
 2. Jalankan server API:
    ```bash
    go run ./cmd/api
